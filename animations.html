@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidTech | Анимациялық Тақырыптар</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicons.png"> 
+    
+    <style>
+        /* НЕГІЗГІ ЖӘНЕ ЖАЛПЫ СТИЛЬДЕР (KidTech) */
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6; 
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        h1, h3 {
+            color: #007bff; 
+            font-weight: 800;
+        }
+
+        /* HEADER СТИЛІ (KidTech логотипі) */
+        .main-header {
+            background-color: #fff;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #ff6f00;
+        }
+        .logo .emoji {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        /* БҰЛ БЕТКЕ ҒАНА ҚАТЫСТЫ СТИЛЬДЕР (СІЗ ҰСЫНҒАН ҮЛГІ) */
+        .topics-header {
+            background-color: #fff;
+            padding: 30px 5%;
+            text-align: center;
+            border-bottom: 2px solid #ddd;
+        }
+        .topics-header h1 {
+            font-size: 2.8em;
+            color: #004d99;
+            margin-bottom: 10px;
+        }
+        .topics-header p {
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .grid-container {
+            display: grid;
+            /* Бейімделгіш 3 баған */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
+            padding: 50px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .topic-card {
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+            text-decoration: none; /* Сілтеме сызығын алып тастау */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .topic-card h2 {
+            font-size: 1.8em;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .topic-card p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        /* Түстер (Сіз ұсынған түс кодтары) */
+        .color-blue { background-color: #3498db; }
+        .color-yellow { background-color: #f1c40f; }
+        .color-pink { background-color: #e91e63; }
+        .color-green { background-color: #2ecc71; }
+        .color-purple { background-color: #9b59b6; }
+        .color-orange { background-color: #e67e22; }
+
+        /* FOOTER СТИЛІ */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9em;
+            margin-top: 40px;
+        }
+
+        /* Медиа сұраулар (Responsive дизайн) */
+        @media (max-width: 768px) {
+            .topics-header h1 {
+                font-size: 2em;
+            }
+            .grid-container {
+                grid-template-columns: 1fr; /* Мобильді құрылғыларда бір баған */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <span class="emoji">📚</span> KidTech
+        </div>
+        </header>
+
+    <header class="topics-header">
+        <h1> Цифрлық сауаттылық тақырыптары</h1>
+        <p>Балалардың логикалық ойлауын және креативті дағдыларын дамытатын жобалар.</p>
+    </header>
+
+    <div class="grid-container">
+        
+        <a href="my_cat.html" class="topic-card color-blue">
+            <h2>Мысықты бағдарламалау</h2>
+            <p>Кейіпкерді қозғалту командаларын үйрен!</p>
+        </a>
+        
+        <a href="labyrinth.html" class="topic-card color-yellow">
+            <h2>Лабиринт логикасы</h2>
+            <p>Ең қысқа жолды табу алгоритмі.</p>
+        </a>
+        
+        <a href="drawing.html" class="topic-card color-pink">
+            <h2>Компьютерде сурет салу</h2>
+            <p>Қалам құралдарымен таныс.</p>
+        </a>
+        
+      
+        
+        <a href="multimedia.html" class="topic-card color-purple">
+            <h2>Мультимедиа</h2>
+            <p>Дыбыс  жұмыс.</p>
+        </a>
+        
+        <a href="storage.html" class="topic-card color-orange">
+            <h2>Ақпаратты сақтау</h2>
+            <p>Файлдар және қалталар туралы.</p>
+        </a>
+        
+    </div>
+
+    <footer>
+        <p>&copy; 2025 KidTech. Барлық құқықтар қорғалған. | Анимациялық жобалар.</p>
+    </footer>
+
+</body>
+</html>

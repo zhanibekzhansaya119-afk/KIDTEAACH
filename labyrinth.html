@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабиринт Логикасы</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicons.png"> 
+    
+    <style>
+        /* НЕГІЗГІ СТИЛЬДЕР */
+        body { font-family: 'Nunito', sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; line-height: 1.6; }
+        h1, h2, h3 { font-weight: 800; }
+        .main-header { background-color: #fff; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .logo a { font-size: 1.8em; font-weight: 800; color: #004d99; text-decoration: none; }
+        .back-link { font-size: 1.1em; color: #ff6f00; text-decoration: none; font-weight: 700; }
+        
+        .project-container { max-width: 1100px; /* Контейнерді сәл үлкейту */ margin: 40px auto; padding: 30px; background-color: #fff; border-radius: 15px; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); text-align: center; }
+        .project-header h1 { font-size: 3em; color: #ff6f00; }
+        
+        .game-area { display: flex; gap: 30px; }
+
+        .labyrinth-window {
+            flex: 3;
+            background-color: #2c3e50; 
+            padding: 10px;
+            border-radius: 10px;
+            border: 5px solid #ff6f00;
+            position: relative;
+        }
+
+        /* ⏫ ТҮЗЕТУ: Лабиринт торын одан әрі үлкейту */
+        #labyrinth {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); 
+            grid-template-rows: repeat(5, 1fr);
+            width: 100%;
+            height: 650px; /* Биіктікті айтарлықтай арттыру */
+            gap: 1px;
+            background-color: #34495e;
+            box-sizing: border-box;
+        }
+
+        .cell {
+            background-color: #ecf0f1; 
+            border: 1px solid #bdc3c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1em; /* Мәтін өлшемін сәл үлкейту */
+            color: #555;
+            transition: background-color 0.3s;
+        }
+
+        .wall { background-color: #e74c3c !important; color: #fff; }
+        .start { background-color: #2ecc71 !important; color: #fff; } 
+        .finish { background-color: #9b59b6 !important; color: #fff; font-size: 1.5em; } 
+        
+        /* ⬇️ ТҮЗЕТУ: Роботтың өлшемін кішірейту */
+        #robot {
+            width: 60px; /* Кішірейтілді */
+            height: 60px; /* Кішірейтілді */
+            background-color: #f39c12; 
+            border-radius: 50%;
+            position: absolute;
+            transition: transform 0.3s ease-out, top 0.3s ease-out, left 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em; 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .controls {
+            flex: 1;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-block {
+            padding: 15px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        .control-block:hover { transform: translateY(-2px); }
+        .control-block:active { transform: translateY(0); }
+
+        .move-block { background-color: #3498db; } 
+        .reset-block { background-color: #e74c3c; } 
+        
+        .instructions { margin-top: 30px; padding: 20px; background-color: #d1ecf1; border: 1px solid #bee5eb; border-radius: 10px; text-align: left; }
+        .instructions h3 { color: #007bff; margin-top: 0; }
+        
+        footer { background-color: #333; color: #fff; text-align: center; padding: 20px 0; font-size: 0.9em; margin-top: 40px; }
+
+        /* ⭐ ЖЕҢІС МОДАЛІНІҢ СТИЛІ ⭐ */
+        #win-modal {
+            display: none; /* Бастапқыда жасыру */
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7); /* Күңгірт фон */
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #f4d03f, #ff6f00); /* Алтын градиент */
+            margin: 15% auto; /* Ортаға орналастыру */
+            padding: 40px;
+            border-radius: 20px;
+            width: 80%; 
+            max-width: 500px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            animation: bounceIn 0.6s;
+            color: #fff;
+        }
+
+        .modal-content h2 {
+            font-size: 3em;
+            color: #fff;
+            margin-top: 0;
+            text-shadow: 2px 2px #c0392b;
+        }
+        
+        .modal-content p {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+
+        .modal-button {
+            background-color: #004d99;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+        .modal-button:hover {
+            background-color: #003366;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        /* ⭐ ЖЕҢІС МОДАЛІНІҢ СТИЛІ АЯҚТАЛДЫ ⭐ */
+
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <a href="index.html"><span class="emoji">🏠</span> Басты бетке</a>
+        </div>
+    </header>
+
+    <div class="project-container">
+        <div class="project-header">
+            <span style="font-size: 4em;">🤖</span>
+            <h1>Лабиринт Логикасы: Роботты Басқару</h1>
+            <p style="font-size: 1.2em; color: #555;">Роботты (сары дөңгелек) **күлгін мәреге** (M) жеткізу үшін дұрыс бағытты таңдаңыз. Қызыл кедергілерден (X) аулақ болыңыз!</p>
+        </div>
+        
+        <div class="game-area">
+            
+            <div class="labyrinth-window">
+                <div id="labyrinth">
+                </div>
+                <div id="robot">🤖</div> 
+            </div>
+
+            <div class="controls">
+                <h3>🕹️ Басқару Блоктары</h3>
+                
+                <div class="control-block move-block" onclick="moveRobot('up')">👆 Жоғары</div>
+                <div class="control-block move-block" onclick="moveRobot('down')">👇 Төмен</div>
+                <div class="control-block move-block" onclick="moveRobot('left')">👈 Солға</div>
+                <div class="control-block move-block" onclick="moveRobot('right')">👉 Оңға</div>
+                
+                <div class="control-block reset-block" onclick="initLabyrinth()">🔄 Қайта бастау</div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>✨ Нұсқау</h3>
+            <ol style="font-size: 1.1em; line-height: 1.6;">
+                <li>Лабиринттегі **Бастау** (1) нүктесінен бастаңыз.</li>
+                <li>Роботты **Мәре** (M) нүктесіне дейін жеткізу үшін **дұрыс реттіліктегі** бағыттарды басыңыз.</li>
+                <li>Егер сіз **қызыл кедергіге** (X) тиіп кетсеңіз, қайта бастау керек болады!</li>
+            </ol>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 "Білікті Бала". Барлық құқықтар қорғалған.</p>
+    </footer>
+
+    <div id="win-modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2>🎉 КЕРЕМЕТ!</h2>
+            <p>Құттықтаймыз! Робот мәреге жетті. Логикаңыз өте жақсы дамыған!</p>
+            <button class="modal-button" onclick="closeModal()">Жаңа Лабиринт Бастау</button>
+        </div>
+    </div>
+    <script>
+        const labyrinthDiv = document.getElementById('labyrinth');
+        const robot = document.getElementById('robot');
+        const winModal = document.getElementById('win-modal'); // Жаңа модальді элемент
+
+        const map = [
+            [2, 1, 0, 0, 0], 
+            [0, 1, 0, 1, 0],
+            [0, 0, 0, 1, 0],
+            [1, 1, 0, 1, 0],
+            [0, 0, 0, 0, 3]  
+        ];
+
+        let robotPos = { x: 0, y: 0 }; 
+        let actualCellSize = 0; 
+        const gridSize = 5;
+
+        function initLabyrinth() {
+            labyrinthDiv.innerHTML = ''; 
+            
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.id = `cell-${x}-${y}`;
+
+                    if (map[y][x] === 1) {
+                        cell.classList.add('wall');
+                        cell.textContent = 'X';
+                    } else if (map[y][x] === 2) {
+                        cell.classList.add('start');
+                        cell.textContent = '1';
+                        robotPos = { x: x, y: y };
+                    } else if (map[y][x] === 3) {
+                        cell.classList.add('finish');
+                        cell.textContent = 'M';
+                    }
+                    labyrinthDiv.appendChild(cell);
+                }
+            }
+            
+            const firstCell = document.getElementById('cell-0-0');
+            if (firstCell) {
+                actualCellSize = firstCell.offsetWidth; 
+            }
+
+            updateRobotPosition();
+        }
+
+        function updateRobotPosition() {
+            const xCenter = robotPos.x * actualCellSize + actualCellSize / 2;
+            const yCenter = robotPos.y * actualCellSize + actualCellSize / 2;
+            
+            robot.style.left = `${xCenter}px`;
+            robot.style.top = `${yCenter}px`;
+            robot.style.transform = `translate(-50%, -50%)`; 
+            
+            checkGameStatus();
+        }
+
+        function moveRobot(direction) {
+            let newX = robotPos.x;
+            let newY = robotPos.y;
+
+            if (direction === 'up') newY--;
+            else if (direction === 'down') newY++;
+            else if (direction === 'left') newX--;
+            else if (direction === 'right') newX++;
+
+            // Шектерді тексеру
+            if (newX < 0 || newX >= gridSize || newY < 0 || newY >= gridSize) {
+                alert("Қабырғадан тысқа шыға алмайсыз!");
+                return;
+            }
+
+            // Кедергіні тексеру
+            if (map[newY][newX] === 1) {
+                alert("❌ Кедергіге соғылды! Қайта бастаңыз.");
+                initLabyrinth();
+                return; 
+            }
+
+            // Роботты қозғалту
+            robotPos.x = newX;
+            robotPos.y = newY;
+            updateRobotPosition();
+        }
+
+        // ⭐ ЖЕҢІС ТЕКСЕРІСІН МОДАЛЬҒА АУЫСТЫРУ ⭐
+        function checkGameStatus() {
+            if (map[robotPos.y][robotPos.x] === 3) {
+                setTimeout(() => {
+                    winModal.style.display = "block"; // Модальді көрсету
+                }, 400); 
+            }
+        }
+        
+        // ⭐ МОДАЛЬДІ ЖАБУ ФУНКЦИЯСЫ ⭐
+        function closeModal() {
+            winModal.style.display = "none";
+            initLabyrinth(); // Жаңа лабиринтті бастау
+        }
+
+        document.addEventListener('DOMContentLoaded', initLabyrinth);
+        window.addEventListener('resize', initLabyrinth);
+    </script>
+
+</body>
+</html>

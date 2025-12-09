@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сөздік жұмбақ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicons.png"> 
+    <style>
+        /* ... (Стильдер game_interactive.html-ден) ... */
+        .project-container { max-width: 800px; margin: 40px auto; padding: 30px; background-color: #fff; border-radius: 15px; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); text-align: center; }
+        .puzzle-box { 
+            padding: 30px; 
+            border: 3px solid #e83e8c; 
+            border-radius: 10px; 
+            margin-bottom: 20px;
+        }
+        #scrambledWord { 
+            font-size: 3em; 
+            letter-spacing: 15px; 
+            margin-bottom: 20px; 
+            font-weight: 800; 
+            color: #6f42c1; 
+        }
+        #guessInput { 
+            padding: 10px; 
+            font-size: 1.5em; 
+            text-align: center; 
+            border: 2px solid #ccc; 
+            border-radius: 5px; 
+            text-transform: uppercase;
+        }
+        .controls button {
+             padding: 10px 20px;
+             background-color: #e83e8c;
+             color: white;
+             border: none;
+             border-radius: 5px;
+             font-weight: 700;
+             cursor: pointer;
+        }
+        .controls button:hover { background-color: #c0392b; }
+        .result-message { margin-top: 15px; font-size: 1.3em; font-weight: 700; }
+    </style>
+</head>
+<body>
+    
+    <div class="project-container">
+        <h1>🔠 Сөздік Жұмбақ</h1>
+        <p>Берілген араласқан әріптерден дұрыс сөзді құрастыр.</p>
+
+        <div class="puzzle-box">
+            <div id="scrambledWord"></div>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="guessInput" placeholder="Сөзді енгіз">
+            <button onclick="checkGuess()">Тексеру</button>
+            <button onclick="loadNewWord()">Жаңа Сөз</button>
+        </div>
+
+        <div id="resultMessage" class="result-message"></div>
+    </div>
+
+    <script>
+        const words = [
+            { original: "КОД", hint: "Бағдарламалау тілінің негізі" },
+            { original: "ТЫШҚАН", hint: "Компьютерді басқару құралы" },
+            { original: "САБАҚ", hint: "Мектептегі оқу процесі" },
+            { original: "БІЛІМ", hint: "Оқу арқылы жинақталған ақпарат" },
+        ];
+        let currentWord = {};
+
+        function shuffleWord(word) {
+            let a = word.split(""),
+                n = a.length;
+            for (let i = n - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                let tmp = a[i];
+                a[i] = a[j];
+                a[j] = tmp;
+            }
+            return a.join("");
+        }
+
+        function loadNewWord() {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            currentWord = words[randomIndex];
+            
+            const scrambled = shuffleWord(currentWord.original);
+            document.getElementById('scrambledWord').textContent = scrambled;
+            document.getElementById('guessInput').value = '';
+            document.getElementById('resultMessage').textContent = `Көмек: ${currentWord.hint}`;
+            document.getElementById('resultMessage').style.backgroundColor = 'transparent';
+        }
+
+        function checkGuess() {
+            const guess = document.getElementById('guessInput').value.toUpperCase();
+            const resultElement = document.getElementById('resultMessage');
+
+            if (guess === currentWord.original) {
+                resultElement.textContent = `✅ Дұрыс! Сөз: ${currentWord.original}`;
+                resultElement.style.backgroundColor = '#d4edda';
+            } else {
+                resultElement.textContent = `❌ Қате. Қайталап көріңіз. Көмек: ${currentWord.hint}`;
+                resultElement.style.backgroundColor = '#f8d7da';
+            }
+        }
+
+        window.onload = loadNewWord;
+    </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Анимация: Мысықты Бағдарламалау</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicons.png"> 
+    <style>
+        body { font-family: 'Nunito', sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; line-height: 1.6; }
+        h1, h2, h3 { font-weight: 800; }
+        .main-header { background-color: #fff; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .logo a { font-size: 1.8em; font-weight: 800; color: #004d99; text-decoration: none; }
+        .back-link { font-size: 1.1em; color: #ff6f00; text-decoration: none; font-weight: 700; }
+        .project-container { max-width: 1100px; margin: 40px auto; padding: 30px; background-color: #fff; border-radius: 15px; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); text-align: center; }
+        .project-header h1 { font-size: 3em; color: #004d99; }
+        .interactive-area { display: flex; gap: 30px; margin-bottom: 40px; text-align: left; }
+        
+        .simulation-window {
+            flex: 2;
+            background-color: #eaf8ff;
+            min-height: 450px;
+            border-radius: 10px;
+            border: 4px solid #007bff;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+        }
+
+        #cat {
+            /* Өлшемі 180px болып үлкейтілді */
+            width: 180px; 
+            height: 180px; 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            transition: all 0.5s ease-out; 
+            user-select: none;
+            cursor: grab;
+            z-index: 10;
+        }
+        
+        .code-blocks { flex: 1; padding: 20px; background-color: #f7f7f7; border-radius: 10px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05); }
+        .code-blocks h3 { color: #ff6f00; margin-top: 0; font-size: 1.4em; }
+        .code-block { padding: 10px; margin-bottom: 10px; border-radius: 5px; color: #fff; font-weight: 700; cursor: pointer; text-align: center; transition: transform 0.1s; }
+        .code-block:hover { opacity: 0.9; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); }
+        .block-event { background-color: #ffbf00; }
+        .block-motion { background-color: #4c97ff; }
+        .block-control { background-color: #ffab19; }
+        .task-instructions { padding: 30px; background-color: #fff3e0; border-radius: 10px; border: 1px solid #ffcc80; margin-top: 30px; text-align: left; }
+        footer { background-color: #333; color: #fff; text-align: center; padding: 20px 0; font-size: 0.9em; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <a href="index.html"><span class="emoji">🏠</span> Басты бетке</a>
+        </div>
+    </header>
+
+    <div class="project-container">
+        <div class="project-header">
+            <span style="font-size: 4em;">🐾</span>
+            <h1>Мысықпен Ойнайық! (Қозғалыс Анимациясы)</h1>
+            <p style="font-size: 1.2em; color: #555;">Төмендегі командаларды басыңыз және **Мысықтың сахнада қалай қозғалатынын** көріңіз!</p>
+        </div>
+
+        <div class="interactive-area">
+            
+            <div class="simulation-window">
+                <img id="cat" src="my_cat.png" alt="Scratch Мысығының суреті">
+            </div>
+
+            <div class="code-blocks">
+                <h3>🧩 Команда Блоктары</h3>
+                
+                <div class="code-block block-event" onclick="resetPosition()">
+                    ✅ Жасыл Туды басқанда (Ортаға Қайтару)
+                </div>
+                <div class="code-block block-motion" onclick="moveCat(40, 0)">➡️ 40 қадам жылжу</div>
+                <div class="code-block block-motion" onclick="moveCat(-40, 0)">⬅️ 40 қадам артқа</div>
+                <div class="code-block block-motion" onclick="rotateCat(30)">↪️ 30° бұрылу</div>
+                <div class="code-block block-control" onclick="sayHello()">💬 "Сәлем!" деу</div>
+            </div>
+        </div>
+        
+        <div class="task-instructions">
+            <h2>✨ Қадамдық Нұсқау</h2>
+            <ol style="font-size: 1.1em; line-height: 1.8;">
+                <li>**Бастау:** Жасыл Туды басып, Мысықты ортаға қайтарыңыз.</li>
+                <li>**Қозғалыс:** Қозғалыс блогын басып, Мысықтың жылжығанын көріңіз.</li>
+            </ol>
+            <a href="https://scratch.mit.edu/projects/editor/" target="_blank" class="btn-primary" style="margin-top: 20px; text-decoration: none; background-color: #28a745;">Scratch Редакторына Өту (Нақты орындау)</a>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 "Білікті Бала". Барлық құқықтар қорғалған.</p>
+    </footer>
+
+    <script>
+        const cat = document.getElementById('cat');
+        let currentX = 0; 
+        let currentY = 0; 
+        let currentRotation = 0; 
+
+        function updateCat() {
+            cat.style.transform = `translate(-50%, -50%) translate(${currentX}px, ${currentY}px) rotate(${currentRotation}deg)`;
+        }
+        function moveCat(dx, dy) { currentX += dx; currentY += dy; updateCat(); }
+        function rotateCat(degrees) { currentRotation += degrees; updateCat(); }
+
+        function resetPosition() {
+            currentX = 0;
+            currentY = 0;
+            currentRotation = 0;
+            updateCat();
+            alert("Анимация басталды! (Мысық ортаға қайтты)");
+        }
+        function sayHello() {
+            alert("Мысық: Мяу! Сәлем, кішкентай бағдарламашы!");
+        }
+
+        updateCat(); 
+    </script>
+
+</body>
+</html>

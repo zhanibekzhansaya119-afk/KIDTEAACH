@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Интерактивті ойындар тізімі</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicons.png"> 
+    <style>
+        body { font-family: 'Nunito', sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; text-align: center; }
+        .main-header { background-color: #fff; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .logo a { font-size: 1.8em; font-weight: 800; color: #004d99; text-decoration: none; }
+        .back-link { font-size: 1.1em; color: #ff6f00; text-decoration: none; font-weight: 700; }
+        
+        .project-container { max-width: 1200px; margin: 50px auto; padding: 30px; background-color: #fff; border-radius: 15px; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); }
+        .project-header h1 { font-size: 3.5em; color: #28a745; margin-bottom: 40px; } 
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        /* Карточка стилі */
+        .game-card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 3px solid #28a745; 
+        }
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-card .icon {
+            font-size: 4em;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .game-card h3 {
+            font-size: 1.8em;
+            color: #28a745;
+            margin-top: 0;
+        }
+        .game-card p {
+            font-size: 1.1em;
+            color: #555;
+        }
+        
+        /* Әр ойынның түсі */
+        .game-card.count { border-color: #3498db; }
+        .game-card.count h3 { color: #3498db; }
+        
+        .game-card.puzzle { border-color: #e83e8c; }
+        .game-card.puzzle h3 { color: #e83e8c; }
+
+        footer { background-color: #333; color: #fff; text-align: center; padding: 20px 0; font-size: 0.9em; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <a href="index.html"><span class="emoji">🏠</span> Басты бетке</a>
+       
+    </header>
+
+    <div class="project-container">
+        <div class="project-header">
+            <span style="font-size: 5em;">🕹️</span>
+            <h1>Интерактивті Ойындар Әлемі</h1>
+            <p style="font-size: 1.4em; color: #555;">Ойлау қабілетіңізді, зейініңізді және логикаңызды дамытыңыз!</p>
+        </div>
+        
+        <div class="game-grid">
+            
+            <a href="count_game.html" class="game-card count">
+                <span class="icon">⏱️</span>
+                <h3>Жылдамдықта санау</h3>
+                <p>Экранда жылдам пайда болып, жоғалып кететін нысандардың санын тап.</p>
+            </a>
+
+            <a href="word_puzzle.html" class="game-card puzzle">
+                <span class="icon">🔠</span>
+                <h3>Сөздік жұмбақ</h3>
+                <p>Араласқан әріптерден сөз құрастыр. Сөздерді табуға зейінді дамытады.</p>
+            </a>
+            
+            <a href="logic_quiz.html" class="game-card" style="border-color: #fd7e14;">
+                <span class="icon">✨</span>
+                <h3 style="color: #fd7e14;">Логикалық сұрақтар</h3>
+                <p>Жаңа ойындар мен тапсырмалар жақын арада қосылады!</p>
+            </a>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 "Білімді Бала". Барлық құқықтар қорғалған.</p>
+    </footer>
+
+</body>
+</html>

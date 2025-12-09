@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗃️ KidTech | Ақпаратты сақтау: файлдар мен қалталар</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicons.png"> 
+    <style>
+        /* [Бұрынғы CSS стильдері толығымен сақталған] */
+        body { font-family: 'Nunito', sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; line-height: 1.6; }
+        .main-header { background-color: #fff; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .logo a { font-size: 1.8em; font-weight: 800; color: #ff6f00; text-decoration: none; }
+        
+        .project-container { max-width: 1000px; margin: 40px auto; padding: 30px; background-color: #fff; border-radius: 15px; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); text-align: center; }
+        .project-header h1 { font-size: 3em; color: #ff6f00; } 
+        
+        .storage-section { margin-top: 30px; text-align: left; }
+
+        .demo-area {
+            background-color: #eaf5ff; 
+            border: 3px solid #ff6f00;
+            border-radius: 10px;
+            min-height: 350px;
+            padding: 20px;
+            position: relative;
+            /* Мобильді құрылғыларда скроллды болдырмау үшін */
+            touch-action: none; 
+        }
+
+        /* Басқару батырмалары */
+        .controls { margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .controls button {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #2ecc71;
+            color: white;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.1s;
+        }
+        .controls button:active {
+             transform: translateY(1px);
+        }
+        
+        /* Объекттердің негізгі стилі */
+        .desktop-item {
+            position: absolute;
+            text-align: center;
+            width: 100px;
+            cursor: pointer; /* Сүйреуді көрсету */
+            user-select: none;
+            transition: transform 0.3s, opacity 0.3s;
+            z-index: 1; /* Жалпы қабат */
+            /* Touch қолдау үшін */
+            touch-action: none; 
+        }
+
+        .folder-icon { font-size: 3em; color: #ffd700; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); }
+        .file-icon { font-size: 3em; color: #3498db; }
+        
+        .folder-label, .file-label {
+            font-size: 0.9em;
+            word-wrap: break-word;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        /* Папканы "ашу" терезесі */
+        #folderWindow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            max-width: 400px;
+            background-color: white;
+            border: 5px solid #ff6f00;
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 100;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            text-align: center;
+        }
+
+        #folderContent {
+            min-height: 50px;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .close-btn { 
+            float: right; 
+            font-size: 1.5em; 
+            cursor: pointer; 
+            color: #e74c3c; 
+        }
+        
+        .explanation { 
+            margin-top: 20px; 
+            font-size: 0.9em; 
+            color: #777;
+        }
+
+        /* Мобильді бейімдеу */
+        @media (max-width: 600px) {
+            .project-header h1 {
+                font-size: 2.5em;
+            }
+            .controls {
+                flex-direction: column; 
+            }
+            .desktop-item {
+                width: 80px; /* Кішірейту */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <a href="index.html"><span class="emoji">🏠</span> Басты бетке</a>
+        </div>
+    </header>
+
+    <div class="project-container">
+        <div class="project-header">
+            <span style="font-size: 4em;">🗃️</span>
+            <h1>Ақпаратты Сақтау және Ұйымдастыру</h1>
+            <p style="font-size: 1.2em; color: #555;">Төменде файлдар мен қалталар жасап, оларды реттеуге тырысып көріңіз!</p>
+        </div>
+        
+        <div class="storage-section">
+            
+            <div class="controls">
+                <button onclick="createFolder()">📁 Жаңа Қалта Ашу</button>
+                <button onclick="createFile('image')">🖼️ Жаңа Сурет Файлы</button>
+                <button onclick="createFile('text')">📝 Жаңа Мәтін Файлы</button>
+            </div>
+
+            <div class="demo-area" id="demoArea">
+                <p id="instruction">Қалта мен файлдар жасап, файлды қалтаға **апарып** (drag and drop) басыңыз.</p>
+                
+                <div id="folderWindow">
+                    <span class="close-btn" onclick="closeFolderWindow()">✖️</span>
+                    <h3 id="windowTitle">Қалтаның Аты</h3>
+                    <p>Қалта ішіндегі файлдар:</p>
+                    <div id="folderContent">
+                        Қалта бос.
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="explanation">
+                **Нұсқау:** Файлды жасаңыз. Оны қалтаның үстіне **ұстап тұрып** сүйреп апарып, жіберіңіз (мобильді құрылғы үшін). Содан кейін қалтаны **бір рет басыңыз**!
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 "Білімді Бала". Барлық құқықтар қорғалған.</p>
+    </footer>
+
+    <script>
+        const demoArea = document.getElementById('demoArea');
+        const folderWindow = document.getElementById('folderWindow');
+        const folderContent = document.getElementById('folderContent');
+        const windowTitle = document.getElementById('windowTitle');
+        const instruction = document.getElementById('instruction');
+
+        let itemCount = 0;
+        let folders = {}; // Қалталардың мазмұнын сақтау
+        let currentFolder = null; // Файл қай папканың үстінде тұрғанын білу үшін
+
+        // Екі элементтің бір-бірінің үстінде тұрғанын тексеру
+        function isOverlapping(el1, el2) {
+            const rect1 = el1.getBoundingClientRect();
+            const rect2 = el2.getBoundingClientRect();
+            return !(
+                rect1.right < rect2.left || 
+                rect1.left > rect2.right || 
+                rect1.bottom < rect2.top || 
+                rect1.top > rect2.bottom
+            );
+        }
+
+        // Объекттерді сүйреп апаруды қосу (Тышқан + Сенсор)
+        function makeDraggable(element, type) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            let isDragging = false;
+            let currentX, currentY;
+
+            // 1. Mouse Events (компьютер үшін)
+            element.onmousedown = dragMouseDown;
+            
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                isDragging = false; 
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+                element.style.zIndex = itemCount + 10;
+            }
+
+            // 2. Touch Events (мобильді құрылғы үшін)
+            element.ontouchstart = dragTouchStart;
+
+            function dragTouchStart(e) {
+                e = e || window.event;
+                // Бір саусақты ғана қабылдау
+                if (e.touches.length === 1) { 
+                    isDragging = false;
+                    currentX = e.touches[0].clientX;
+                    currentY = e.touches[0].clientY;
+                    pos3 = currentX;
+                    pos4 = currentY;
+                    document.ontouchend = closeDragElement;
+                    document.ontouchmove = elementTouchDrag;
+                    element.style.zIndex = itemCount + 10;
+                    // Қалтаны ашу оқиғасын уақытша тоқтату
+                    element.onclick = null; 
+                }
+            }
+
+            // Жалпы сүйреу логикасы
+            const elementMove = (clientX, clientY) => {
+                isDragging = true;
+                pos1 = pos3 - clientX;
+                pos2 = pos4 - clientY;
+                pos3 = clientX;
+                pos4 = clientY;
+                
+                let newTop = element.offsetTop - pos2;
+                let newLeft = element.offsetLeft - pos1;
+
+                // Алаң шегінен шығармау
+                newTop = Math.max(0, Math.min(newTop, demoArea.clientHeight - element.offsetHeight));
+                newLeft = Math.max(0, Math.min(newLeft, demoArea.clientWidth - element.offsetWidth));
+
+                element.style.top = newTop + "px";
+                element.style.left = newLeft + "px";
+
+                if (type === 'file') {
+                    // Файл сүйрелгенде, папканың үстінде ме, тексеру
+                    const files = document.querySelectorAll('.desktop-item[data-type="folder"]');
+                    currentFolder = null;
+                    element.style.opacity = 1;
+
+                    files.forEach(folder => {
+                        if (isOverlapping(element, folder)) {
+                            folder.style.transform = 'scale(1.1)'; // Үстінде тұрғанын көрсету
+                            currentFolder = folder;
+                        } else {
+                            folder.style.transform = 'scale(1)';
+                        }
+                    });
+                }
+            };
+            
+            // Сүйреу (тышқан)
+            const elementDrag = (e) => {
+                e.preventDefault();
+                elementMove(e.clientX, e.clientY);
+            };
+
+            // Сүйреу (сенсор)
+            const elementTouchDrag = (e) => {
+                e.preventDefault();
+                if (e.touches.length === 1) {
+                    elementMove(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            };
+
+            const closeDragElement = () => {
+                document.onmouseup = null;
+                document.onmousemove = null;
+                document.ontouchend = null;
+                document.ontouchmove = null;
+                element.style.zIndex = 1;
+                
+                // Файлды қалтаға салу (имитация)
+                if (type === 'file' && currentFolder) {
+                    const fileId = element.id;
+                    const folderId = currentFolder.id;
+                    const fileName = element.querySelector('.file-label').textContent;
+                    
+                    if (!folders[folderId]) folders[folderId] = [];
+                    
+                    // Бұл файл қалтада бұрыннан бар ма, тексеру
+                    const exists = folders[folderId].some(f => f.id === fileId);
+
+                    if (!exists) {
+                        // Файлды массивке қосу
+                        folders[folderId].push({ 
+                            id: fileId, 
+                            name: fileName, 
+                            icon: element.querySelector('.file-icon').textContent 
+                        });
+                        
+                        // Файлды жұмыс үстелінен жою
+                        element.remove();
+                        instruction.textContent = `✅ Файл '${fileName}' қалтаға '${currentFolder.querySelector('.folder-label').textContent}' сәтті салынды!`;
+                    } else {
+                        instruction.textContent = `⚠️ Файл '${fileName}' бұл қалтада бар.`;
+                    }
+                    
+                    currentFolder.style.transform = 'scale(1)';
+                } else if (type === 'file' && !isDragging) {
+                     // Егер файл болса және сүйрелмесе, оны ашуға тырысу (имитация)
+                     instruction.textContent = `🖼️/📝 '${element.querySelector('.file-label').textContent}' файлы ашылды (имитация).`;
+                }
+
+                // Егер папканы басу арқылы ашуға тырысса, оны қалпына келтіру
+                if (type === 'folder') {
+                    element.onclick = () => openFolder(element.id, element.querySelector('.folder-label').textContent);
+                }
+            };
+        }
+
+        // ... (Төмендегі createFolder, createFile, openFolder, closeFolderWindow функциялары өзгеріссіз қалады) ...
+
+        // Қалта жасау
+        function createFolder() {
+            itemCount++;
+            const name = prompt("Қалтаның атын енгізіңіз:", "Жаңа Қалта " + itemCount);
+            if (!name) return;
+
+            const folder = document.createElement('div');
+            const folderId = 'folder_' + itemCount;
+            folder.id = folderId;
+            folder.className = 'desktop-item';
+            folder.dataset.type = 'folder';
+            folder.innerHTML = `<span class="folder-icon">📂</span><span class="folder-label">${name}</span>`;
+            
+            folder.style.top = Math.floor(Math.random() * (demoArea.clientHeight - 120)) + "px";
+            folder.style.left = Math.floor(Math.random() * (demoArea.clientWidth - 120)) + "px";
+
+            demoArea.appendChild(folder);
+            makeDraggable(folder, 'folder');
+            folders[folderId] = []; 
+
+            // Папканы басу арқылы ашу
+            folder.onclick = () => openFolder(folderId, name);
+            folder.ondblclick = () => openFolder(folderId, name);
+            
+            instruction.textContent = `✅ Жаңа '${name}' қалтасы ашылды.`;
+        }
+
+        // Файл жасау
+        function createFile(fileType) {
+            itemCount++;
+            let name, icon;
+            if (fileType === 'image') {
+                name = prompt("Сурет файлының атын енгізіңіз:", "Сурет_" + itemCount + ".png");
+                icon = '🖼️';
+            } else {
+                name = prompt("Мәтіндік файлдың атын енгізіңіз:", "Хат_" + itemCount + ".txt");
+                icon = '📝';
+            }
+            if (!name) return;
+
+            const file = document.createElement('div');
+            file.id = 'file_' + itemCount;
+            file.className = 'desktop-item';
+            file.dataset.type = 'file';
+            file.innerHTML = `<span class="file-icon">${icon}</span><span class="file-label">${name}</span>`;
+            
+            file.style.top = Math.floor(Math.random() * (demoArea.clientHeight - 120)) + "px";
+            file.style.left = Math.floor(Math.random() * (demoArea.clientWidth - 120)) + "px";
+
+            demoArea.appendChild(file);
+            makeDraggable(file, 'file');
+            
+            instruction.textContent = `✅ Жаңа '${name}' файлы жасалды. Оны қалтаға сүйреп апарыңыз.`;
+        }
+
+        // Қалтаны ашу
+        function openFolder(folderId, name) {
+            windowTitle.textContent = name;
+            folderContent.innerHTML = '';
+            
+            if (folders[folderId] && folders[folderId].length > 0) {
+                folders[folderId].forEach(file => {
+                    const fileItem = document.createElement('span');
+                    fileItem.className = 'desktop-item';
+                    fileItem.style.position = 'static';
+                    fileItem.style.width = '70px';
+                    fileItem.style.margin = '5px';
+                    // Иконка кішірек болуы үшін
+                    fileItem.innerHTML = `<span class="file-icon" style="font-size: 2em;">${file.icon}</span><span class="file-label" style="font-size: 0.7em;">${file.name}</span>`; 
+                    folderContent.appendChild(fileItem);
+                });
+            } else {
+                folderContent.innerHTML = 'Қалта бос.';
+            }
+            folderWindow.style.display = 'block';
+            instruction.textContent = `📁 '${name}' қалтасы ашылды.`;
+        }
+
+        // Қалта терезесін жабу
+        function closeFolderWindow() {
+            folderWindow.style.display = 'none';
+            instruction.textContent = `Жаңа файлдар мен қалталар жасап, тәжірибе жасауды жалғастырыңыз.`;
+        }
+    </script>
+</body>
+</html>

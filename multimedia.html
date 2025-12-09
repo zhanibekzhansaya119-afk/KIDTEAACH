@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎙️ KidTech | Дыбысты Жазу және Өңдеу</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicons.png"> 
+
+    <style>
+        /* [CSS өзгеріссіз қалды] */
+        body { 
+            font-family: 'Nunito', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #f4f7f6; 
+            color: #333; 
+            line-height: 1.6; 
+        }
+        .main-header { 
+            background-color: #fff; 
+            padding: 20px 5%; 
+            display: flex; 
+            justify-content: flex-start; 
+            align-items: center; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+        .logo a { 
+            font-size: 1.8em; 
+            font-weight: 800; 
+            color: #ff6f00; 
+            text-decoration: none; 
+        }
+        .logo .emoji { 
+            margin-right: 5px; 
+            font-size: 1.2em;
+        }
+
+        .project-container { 
+            max-width: 800px; 
+            margin: 40px auto; 
+            padding: 30px; 
+            background-color: #fff; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); 
+            text-align: center; 
+        }
+        .project-header h1 { 
+            font-size: 3em; 
+            color: #6f42c1; 
+            margin-bottom: 5px;
+        } 
+        
+        .media-card {
+            background-color: #f7f7f7;
+            padding: 30px;
+            border-radius: 10px;
+            border: 3px solid #6f42c1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            margin-top: 30px;
+        }
+        .media-card h3 { 
+            color: #6f42c1; 
+            font-size: 2em; 
+            margin-top: 0; 
+        }
+
+        .controls, .edit-controls { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            margin-top: 20px; 
+            justify-content: center;
+        }
+        .controls button, .edit-controls button {
+            padding: 10px 15px;
+            font-size: 1.0em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            font-weight: 700;
+        }
+        .controls button:active, .edit-controls button:active {
+            transform: translateY(1px);
+        }
+
+        /* ТҮСТЕР */
+        #recordButton { background-color: #e74c3c; color: white; }
+        #recordButton.recording { 
+            background-color: #c0392b;
+            box-shadow: 0 0 10px #c0392b;
+        }
+        #stopButton { background-color: #3498db; color: white; }
+        #playButton { background-color: #2ecc71; color: white; }
+
+        .edit-controls button { background-color: #f39c12; color: white; }
+        .edit-controls button:hover { background-color: #e67e22; }
+        
+        /* МӘРТЕБЕ ХАБАРЛАМАСЫ */
+        #statusMessage { 
+            margin-top: 20px; 
+            font-size: 1.2em; 
+            font-weight: 700; 
+            color: #6f42c1;
+            text-align: center;
+        }
+
+        #audioPlayer { 
+            width: 100%; 
+            margin-top: 30px; 
+            display: none; 
+        }
+        
+        /* ӨҢДЕУ ПАНЕЛІ */
+        .edit-panel { 
+            margin-top: 30px; 
+            padding: 20px; 
+            border: 2px dashed #f39c12; 
+            border-radius: 8px; 
+            text-align: center; 
+        }
+        .edit-panel h4 { 
+            color: #f39c12; 
+            margin-top: 0; 
+            font-size: 1.5em;
+        }
+        .explanation {
+            margin-top: 20px;
+            font-style: italic;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        /* FOOTER */
+        footer { 
+            background-color: #333; 
+            color: #fff; 
+            text-align: center; 
+            padding: 20px 0; 
+            font-size: 0.9em; 
+            margin-top: 40px; 
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .project-header h1 {
+                font-size: 2em;
+            }
+            .controls, .edit-controls {
+                justify-content: space-between;
+            }
+            .controls button, .edit-controls button {
+                flex-grow: 1; 
+                margin: 5px 0; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <a href="index.html"><span class="emoji">📚</span> **KidTech**</a>
+        </div>
+    </header>
+
+    <div class="project-container">
+        <div class="project-header">
+            <span style="font-size: 4em;">🎙️</span>
+            <h1>Дыбысты Жазу және Өңдеу Құралдары</h1>
+            <p style="font-size: 1.2em; color: #555;">Өз дауысыңды жазып, оған әртүрлі эффектілер мен өзгерістер қосуды үйрен!</p>
+        </div>
+        
+        <div class="media-card">
+            <h3>🎵 Дыбысты Басқару</h3>
+            <p>1. Микрофонды қосып, дауысыңды жаз.</p>
+            
+            <div class="controls">
+                <button id="recordButton" onclick="startRecording()">🔴 Жазуды Бастау</button>
+                <button id="stopButton" onclick="stopRecording()" disabled>⏹️ Тоқтату</button>
+                <button id="playButton" onclick="playRecording()" disabled>▶️ Тыңдау</button>
+            </div>
+            
+            <div id="statusMessage">**Жазуды бастаңыз...**</div>
+            
+            <audio id="audioPlayer" controls></audio>
+            
+            <div class="edit-panel">
+                <h4>🛠️ Дыбысты Өңдеу (Эффектілер)</h4>
+                <p>2. Жазылған дыбысқа өзгерістер енгіз:</p>
+
+                <div class="edit-controls">
+                    <button id="speedEffect" onclick="toggleSpeedEffect()" disabled>🐇 Жылдамдату/Баяулату</button>
+                    <button id="rewindEffect" onclick="rewindEffect()" disabled>⏪ **Кері Ойнату**</button>
+                    <button id="resetButton" onclick="resetAudio()" disabled>🔄 Бастапқы Қалпына Қайтару</button>
+                </div>
+                </div>
+
+            <div class="explanation">
+                **Маңызды ескерту:** **Кері ойнату** үшін дыбыс алдымен өңделуі (декодталуы) керек. Бұл біраз уақыт алуы мүмкін.
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 KidTech. Барлық құқықтар қорғалған.</p>
+    </footer>
+
+    <script>
+        // Web Audio API-ды инициализациялау
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioContext = new AudioContext();
+        
+        let mediaRecorder;
+        let audioChunks = [];
+        let audioBlob = null;
+        let mimeType = 'audio/webm';
+        
+        // Web Audio API-дағы декодталған буфер
+        let originalBuffer = null;
+        
+        const statusMessage = document.getElementById('statusMessage');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const recordButton = document.getElementById('recordButton');
+        const stopButton = document.getElementById('stopButton');
+        const playButton = document.getElementById('playButton');
+        
+        // "Басын Кесіп Алу" батырмасы алынып тасталды, тізімді жаңарттық
+        const editButtons = [
+            document.getElementById('speedEffect'),
+            document.getElementById('rewindEffect'),
+            document.getElementById('resetButton')
+        ];
+
+        function toggleEditControls(enable) {
+            editButtons.forEach(btn => btn.disabled = !enable);
+        }
+
+        // Жалпы Audio API ойнату функциясы
+        function playAudioBuffer(buffer, speed = 1) {
+            // Ескі ойнатылып жатқанды тоқтату
+            audioContext.resume(); // Контексті іске қосу
+            
+            let audioSource = audioContext.createBufferSource();
+            audioSource.buffer = buffer;
+            audioSource.playbackRate.value = speed;
+            audioSource.connect(audioContext.destination);
+
+            audioSource.start(0); 
+
+            audioSource.onended = () => {
+                if (statusMessage.textContent.includes("ойнатылуда")) {
+                    statusMessage.textContent = "✅ Ойнату аяқталды.";
+                    // Кері ойнатылғаннан кейін HTML5 плейерді қайта көрсету
+                    audioPlayer.style.display = 'block'; 
+                }
+            };
+        }
+
+        function resetAudioState() {
+            // HTML5 плейерді қалыпқа келтіру
+            audioPlayer.playbackRate = 1;
+            audioPlayer.currentTime = 0;
+            
+            if (audioBlob) {
+                const audioUrl = URL.createObjectURL(audioBlob);
+                audioPlayer.src = audioUrl;
+            }
+        }
+
+        // Дыбысты декодтау (Web Audio API-ға жүктеу)
+        function decodeAudio(audioBlob) {
+            statusMessage.textContent = "⏳ Дыбыс өңдеуге дайындалуда...";
+            const reader = new FileReader();
+
+            return new Promise((resolve, reject) => {
+                reader.onload = () => {
+                    audioContext.decodeAudioData(reader.result, (buffer) => {
+                        originalBuffer = buffer;
+                        resolve();
+                    }, (error) => {
+                        reject("Дыбысты декодтау қатесі: " + error);
+                    });
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(audioBlob);
+            });
+        }
+
+        // Жазуды бастау
+        function startRecording() {
+            const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const isSecure = window.location.protocol === 'https:';
+
+            if (!isSecure && !isLocal) {
+                statusMessage.textContent = "❌ Қате: Микрофон тек HTTPS немесе localhost арқылы жұмыс істейді.";
+                recordButton.disabled = false;
+                return; 
+            }
+            
+            statusMessage.textContent = "🎙️ Жазылуда... Сөйлеңіз!";
+            recordButton.classList.add('recording');
+            recordButton.disabled = true;
+            stopButton.disabled = false;
+            playButton.disabled = true;
+            toggleEditControls(false);
+            audioPlayer.style.display = 'none';
+            audioChunks = [];
+            audioBlob = null;
+            originalBuffer = null;
+            resetAudioState();
+
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    // [MIME типтерін тексеру логикасы]
+                    if (MediaRecorder.isTypeSupported('audio/webm; codecs=opus')) {
+                        mimeType = 'audio/webm; codecs=opus';
+                    } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+                         mimeType = 'audio/ogg';
+                    } else {
+                        mimeType = 'audio/webm';
+                    }
+
+                    mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
+                    
+                    mediaRecorder.ondataavailable = event => { audioChunks.push(event.data); };
+
+                    mediaRecorder.onstop = () => {
+                        audioBlob = new Blob(audioChunks, { type: mimeType });
+                        stream.getTracks().forEach(track => track.stop());
+
+                        // Дыбыс жазылғаннан кейін декодтаймыз
+                        decodeAudio(audioBlob).then(() => {
+                            statusMessage.textContent = "✅ Жазу аяқталды. Тыңдауға болады.";
+                            playButton.disabled = false;
+                            toggleEditControls(true);
+                            audioPlayer.src = URL.createObjectURL(audioBlob); // HTML5 player үшін
+                            audioPlayer.style.display = 'block';
+                        }).catch(err => {
+                            statusMessage.textContent = `❌ Декодтау қатесі: ${err}`;
+                            playButton.disabled = false; // Тек HTML5 арқылы тыңдауға мүмкіндік беру
+                            audioPlayer.src = URL.createObjectURL(audioBlob);
+                            audioPlayer.style.display = 'block';
+                        });
+                    };
+
+                    mediaRecorder.start();
+                })
+                .catch(err => {
+                    let errorMsg;
+                    if (err.name === "NotAllowedError") {
+                        errorMsg = "❌ Микрофонға рұқсат жоқ. Браузердің рұқсатын тексеріңіз.";
+                    } else if (err.name === "NotFoundError") {
+                         errorMsg = "❌ Микрофон құрылғысы табылған жоқ.";
+                    } else {
+                         errorMsg = `❌ Қате: ${err.name}. Қайта жүктеңіз.`;
+                    }
+                    statusMessage.textContent = errorMsg;
+                    recordButton.disabled = false;
+                    stopButton.disabled = true;
+                    recordButton.classList.remove('recording');
+                });
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+            recordButton.classList.remove('recording');
+            recordButton.disabled = false;
+            stopButton.disabled = true;
+        }
+
+        // Тыңдау - әдеттегі HTML5 плейер арқылы
+        function playRecording() {
+             if (audioBlob) {
+                // Кері ойнатудан кейін HTML5 плейерді қалыпқа келтіру
+                resetAudioState();
+                audioPlayer.style.display = 'block';
+                audioPlayer.play();
+                statusMessage.textContent = "▶️ Жазылған дыбыс ойнатылуда...";
+            } else {
+                statusMessage.textContent = "Әлі дыбыс жазылған жоқ.";
+            }
+        }
+        
+        // 1. Жылдамдату/Баяулату
+        function toggleSpeedEffect() {
+            if (audioBlob) {
+                // Кері ойнатудан кейін жылдамдықты өзгерту үшін, бірінші қалыпқа келтіру
+                resetAudioState();
+                audioPlayer.style.display = 'block';
+                
+                if (audioPlayer.playbackRate === 1) {
+                    audioPlayer.playbackRate = 2; // Жылдамдату
+                    statusMessage.textContent = "✨ Дыбыс 2 есе жылдамдатылды!";
+                } else if (audioPlayer.playbackRate === 2) {
+                    audioPlayer.playbackRate = 0.5; // Баяулату
+                    statusMessage.textContent = "🐌 Дыбыс 2 есе баяулатылды!";
+                } else {
+                    audioPlayer.playbackRate = 1; // Қалыпты
+                    statusMessage.textContent = "🔄 Қалыпты жылдамдыққа оралды.";
+                }
+                audioPlayer.play();
+            }
+        }
+
+        // 2. НАҚТЫ Кері Ойнату (Web Audio API)
+        function rewindEffect() {
+            if (!originalBuffer) {
+                // Егер декодталған буфер болмаса, декодтауға тырысамыз (қайталама жағдай үшін)
+                if (audioBlob) {
+                    decodeAudio(audioBlob).then(() => {
+                        rewindEffectLogic();
+                    }).catch(err => {
+                        statusMessage.textContent = `❌ Кері ойнату қатесі: ${err}. Бастапқы күйге келтіріңіз.`;
+                    });
+                } else {
+                    statusMessage.textContent = "Дыбыс жазылмаған немесе декодталмаған.";
+                }
+                return;
+            }
+            rewindEffectLogic();
+        }
+        
+        function rewindEffectLogic() {
+            // HTML5 плейерді жасырамыз
+            audioPlayer.style.display = 'none';
+            statusMessage.textContent = "⏳ Кері ойнату буфері дайындалуда...";
+
+            // Жаңа буфер жасау
+            const reversedBuffer = audioContext.createBuffer(
+                originalBuffer.numberOfChannels,
+                originalBuffer.length,
+                originalBuffer.sampleRate
+            );
+
+            // Әр каналды кері аудару
+            for (let i = 0; i < originalBuffer.numberOfChannels; i++) {
+                const originalData = originalBuffer.getChannelData(i);
+                const reversedData = reversedBuffer.getChannelData(i);
+                
+                for (let j = 0; j < originalBuffer.length; j++) {
+                    // Кері ретпен көшіру
+                    reversedData[j] = originalData[originalBuffer.length - 1 - j];
+                }
+            }
+            
+            playAudioBuffer(reversedBuffer); // Кері буферді ойнату
+            statusMessage.textContent = "✅ **Кері ойнатылуда!**";
+        }
+        
+        // 3. Бастапқы қалпына келтіру
+        function resetAudio() {
+            resetAudioState();
+            audioPlayer.style.display = 'block';
+            statusMessage.textContent = "🔄 Барлық эффектілер алынып, бастапқы күйге келтірілді.";
+        }
+        
+        // **ЕСКЕРТУ:** trimStartEffect() функциясы мен оны шақыру HTML-дан толығымен алынып тасталды.
+    </script>
+</body>
+</html>

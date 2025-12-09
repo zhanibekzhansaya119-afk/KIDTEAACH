@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Компьютерде Сурет Салу (Бояғыш)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicons.png"> 
+    <style>
+        body { font-family: 'Nunito', sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; line-height: 1.6; }
+        h1, h2, h3 { font-weight: 800; }
+        .main-header { background-color: #fff; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .logo a { font-size: 1.8em; font-weight: 800; color: #004d99; text-decoration: none; }
+        .back-link { font-size: 1.1em; color: #ff6f00; text-decoration: none; font-weight: 700; }
+        
+        .project-container { max-width: 1200px; margin: 40px auto; padding: 30px; background-color: #fff; border-radius: 15px; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1); text-align: center; }
+        .project-header h1 { font-size: 3em; color: #e83e8c; }
+        
+        .drawing-area { display: flex; gap: 20px; text-align: left; }
+
+        /* Құралдар панелі */
+        .tools-panel {
+            flex: 1;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .tools-panel h3 { color: #e83e8c; margin-top: 0; }
+        
+        .color-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .color-swatch.active { border-color: #333; }
+
+        .tool-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .tool-button:hover { background-color: #0056b3; }
+
+        /* Сурет салу кенебі (Canvas) */
+        .canvas-area {
+            flex: 3;
+            border: 5px solid #e83e8c;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        #drawingCanvas {
+            width: 100%;
+            height: 500px; /* Кенептің биіктігі */
+            cursor: crosshair;
+            display: block;
+        }
+        
+        .instructions { margin-top: 30px; padding: 20px; background-color: #fce4ec; border: 1px solid #f8bbd0; border-radius: 10px; text-align: left; }
+
+        footer { background-color: #333; color: #fff; text-align: center; padding: 20px 0; font-size: 0.9em; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <a href="index.html"><span class="emoji">🏠</span> Басты бетке</a>
+        </div>
+    </header>
+
+    <div class="project-container">
+        <div class="project-header">
+            <span style="font-size: 4em;">🖌️</span>
+            <h1>Бояғыш Бағдарламасының Негіздері</h1>
+            <p style="font-size: 1.2em; color: #555;">Түстерді таңдаңыз және тышқанды қолданып сурет салыңыз. Осылайша компьютерде сурет салу бағдарламаларының қалай жұмыс істейтінін үйреніңіз.</p>
+        </div>
+        
+        <div class="drawing-area">
+            
+            <div class="tools-panel">
+                <h3>Құралдар Таңдау</h3>
+
+                <label for="penSize">Қаламның жуандығы:</label>
+                <input type="range" id="penSize" min="2" max="20" value="5" onchange="updatePenSize(this.value)">
+                <span id="currentSize">5px</span>
+                
+                <hr style="margin: 15px 0;">
+
+                <h3>Түстер Палитрасы</h3>
+                <div class="color-selector" id="colorSelector">
+                    <div class="color-swatch active" style="background-color: black;" data-color="black"></div>
+                    <div class="color-swatch" style="background-color: red;" data-color="red"></div>
+                    <div class="color-swatch" style="background-color: blue;" data-color="blue"></div>
+                    <div class="color-swatch" style="background-color: green;" data-color="green"></div>
+                    <div class="color-swatch" style="background-color: yellow;" data-color="yellow"></div>
+                    <div class="color-swatch" style="background-color: white; border-color: #ccc;" data-color="white" onclick="alert('Өшіргіш (ластик) ретінде ақ түсті қолданыңыз!')"></div>
+                </div>
+
+                <hr style="margin: 15px 0;">
+
+                <button class="tool-button" onclick="clearCanvas()">🗑️ Кенепті Тазалау</button>
+            </div>
+
+            <div class="canvas-area">
+                <canvas id="drawingCanvas"></canvas>
+            </div>
+
+        </div>
+        
+        <div class="instructions">
+            <h3>✨ Нұсқау</h3>
+            <ol style="font-size: 1.1em; line-height: 1.6;">
+                <li>**Түстер Палитрасынан** қажетті түсті таңдаңыз.</li>
+                <li>**Қаламның жуандығын** реттеңіз.</li>
+                <li>Тышқанды басып тұрып, сурет салу алаңында **жылжытыңыз** (салыңыз).</li>
+            </ol>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 "Білікті Бала". Барлық құқықтар қорғалған.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        const colorSelector = document.getElementById('colorSelector');
+        
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let currentColor = 'black';
+        let penSize = 5;
+
+        // 1. Кенептің өлшемін терезеге сәйкестендіру
+        function resizeCanvas() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            // Тазалағаннан кейін ақ түспен толтыру
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 2. Сурет салу функциясы
+        function draw(e) {
+            if (!isDrawing) return; 
+            
+            // Түс пен жуандықты орнату
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = penSize;
+            ctx.lineCap = 'round'; // Сызықтың ұшын жұмырлау
+
+            // Сызық сызу
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY); // Бастапқы нүкте
+            ctx.lineTo(e.offsetX, e.offsetY); // Соңғы нүкте
+            ctx.stroke();
+
+            // Келесі нүктені жаңарту
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+
+        // 3. Оқиғаларды тыңдау
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+            draw(e); // Түйме басылған жерден нүкте сызу үшін
+        });
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mouseout', () => isDrawing = false);
+
+        // 4. Құралдарды басқару
+        colorSelector.addEventListener('click', (e) => {
+            if (e.target.classList.contains('color-swatch')) {
+                // Түсті өзгерту
+                currentColor = e.target.dataset.color;
+
+                // Белсенді түсті белгілеу
+                document.querySelectorAll('.color-swatch').forEach(swatch => {
+                    swatch.classList.remove('active');
+                });
+                e.target.classList.add('active');
+            }
+        });
+
+        function updatePenSize(size) {
+            penSize = size;
+            document.getElementById('currentSize').textContent = `${size}px`;
+        }
+        
+        function clearCanvas() {
+            if (confirm("Сурет салу алаңын толығымен тазалағыңыз келеді ме?")) {
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // Жүктеу кезінде кенепті бастау
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas); 
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidTech: Бастауыш сыныптарға арналған мультимедиалық білім</title>
+    
+    <link rel="icon" type="image/png" href="favicons.png"> 
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS стилі алдыңғы нұсқадағыдай, сурет пен логотип өзгерістері сақталған */
+        
+        /* Жалпы стильдер... */
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Қаріп стильдері */
+        h1, h3 {
+            color: #007bff;
+            font-weight: 800;
+        }
+
+        /* --------------------
+            Навигация стилі
+            -------------------- */
+        .main-header {
+            background-color: #fff;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo a {
+            text-decoration: none; 
+            color: #ff6f00;
+            font-size: 1.8em;
+            font-weight: 800;
+        }
+
+        .logo .emoji {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        /* --------------------
+            Hero / Баннер стилі
+            -------------------- */
+        .hero-section {
+            background-color: #eaf8ff;
+            padding: 80px 5%;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero-content {
+            max-width: 50%;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            color: #004d99;
+        }
+
+        .hero-content p {
+            font-size: 1.3em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .hero-image {
+            max-width: 50%;
+            background: linear-gradient(135deg, #a7e0ff, #c3ffbe);
+            min-height: 300px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: #004d99;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Суретті орналастыру стилі */
+        .hero-image img {
+            width: 90%; 
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        /* Батырма стилі... (өзгеріссіз) */
+        .btn-primary {
+            display: inline-block;
+            background-color: #ffc107;
+            color: #333;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            background-color: #ff9800;
+            transform: translateY(-2px);
+        }
+        
+        /* Ерекшеліктер стилі... (өзгеріссіз) */
+        .features-section {
+            padding: 60px 5%;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            text-align: center;
+        }
+
+        .feature-card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            flex: 0 1 300px;
+            min-width: 250px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card .icon {
+            font-size: 3em;
+            display: block;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card:nth-child(1) .icon { color: #ff5722; }
+        .feature-card:nth-child(2) .icon { color: #00bcd4; }
+        
+        .feature-card h3 {
+            margin-top: 0;
+        }
+
+        /* Төменгі деректеме стилі... (өзгеріссіз) */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9em;
+            margin-top: 40px;
+        }
+
+        /* Медиа сұраулар... (өзгеріссіз) */
+        @media (max-width: 1024px) {
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-content, .hero-image {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5em;
+            }
+            .features-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            .feature-card {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <a href="index.html">
+                <span class="emoji">📚</span> KidTech
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Оқу үдерісін қызықты әрі тиімді етеміз!</h1>
+                <p>Бұл – бастауыш сынып оқушыларына арналған мультимедиалық білім әлемі. Балаңыздың білімге деген құштарлығын оятыңыз!</p>
+            </div>
+            <div class="hero-image">
+                <img src="hero_image.png" alt="Бастауыш сынып оқушыларына арналған визуалды оқыту">
+                
+                <p>Визуалды оқыту </p>
+                <small>Мультимедиалық құралдармен жұмыс істеу арқылы оқу тиімділігін арттырыңыз.</small>
+            </div>
+        </section>
+
+        <section class="features-section" id="features">
+            <a href="animations.html" class="feature-card"> 
+                <span class="icon">🎨</span>
+                <h3>Интерактивті анимациялар</h3> 
+                <p>Көрнекілік пен есте сақтау қабілетін арттыратын қызықты интерактивті анимациялық жобалар мен сабақтар.</p>
+            </a>
+            <a href="games.html" class="feature-card">
+                <span class="icon">🎮</span>
+                <h3>Интерактивті
+                     ойындар</h3>
+                <p>Ойын элементтері арқылы логикалық ойлауды дамытуға және білімді бекітуге көмектесетін викториналар.</p>
+            </a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 KidTech: Бастауыш білім платформасы. Барлық құқықтар қорғалған. | Мультимедиа технологияларын қолдану.</p>
+    </footer>
+
+</body>
+</html>
